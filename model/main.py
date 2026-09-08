@@ -238,14 +238,7 @@ def train_one_epoch(
         leave=False,
     )
 
-    for iteration, (
-        _,
-        inputs,
-        targets,
-        input_start_dates,
-        input_end_dates,
-        target_dates,
-    ) in progress_bar:
+    for iteration, (_,inputs,targets,input_start_dates,input_end_dates,target_dates,) in progress_bar:
         inputs = inputs.to(device, non_blocking=True)
         targets = targets.to(device, non_blocking=True)
 
@@ -315,14 +308,7 @@ def validate_one_epoch(
     )
 
     with torch.no_grad():
-        for iteration, (
-            _,
-            inputs,
-            targets,
-            input_start_dates,
-            input_end_dates,
-            target_dates,
-        ) in progress_bar:
+        for iteration, (_,inputs,targets,input_start_dates,input_end_dates, target_dates,) in progress_bar:
             inputs = inputs.to(device, non_blocking=True)
             targets = targets.to(device, non_blocking=True)
 
@@ -388,16 +374,14 @@ def main():
             target_config=config["data"]["target"],
             lead_days=lead_days,
             shape_scale=shape_scale,
-            input_mode=input_mode,
-        )
+            input_mode=input_mode,)
         valid_dataset = MISOReconstructionDataset(
             root=valid_root,
             variables_config=config["data"]["variables"],
             target_config=config["data"]["target"],
             lead_days=lead_days,
             shape_scale=shape_scale,
-            input_mode=input_mode,
-        )
+            input_mode=input_mode,)
 
         batch_size = int(config["training"]["batch_size"])
         num_workers = int(config["training"]["num_workers"])
@@ -458,8 +442,7 @@ def main():
         if lead_days == 0:
             logging.info("Input definition: X(t) -> TP(t).")
         else:
-            logging.info(
-                "Input definition: mean[X(t-%d), ..., X(t-1)] -> TP(t).",
+            logging.info("Input definition: mean[X(t-%d), ..., X(t-1)] -> TP(t).",
                 lead_days,
             )
         logging.info(
@@ -536,13 +519,7 @@ def main():
             last_model_state = model_state
 
             if epoch % 10 == 0 and epoch != 0:
-                early_stopping(
-                    valid_mse,
-                    model_state,
-                    epoch,
-                    save_dir,
-                )
-
+                early_stopping(valid_mse,model_state,epoch,save_dir,)
                 if early_stopping.early_stop:
                     logging.info("Early stopping triggered.")
                     break

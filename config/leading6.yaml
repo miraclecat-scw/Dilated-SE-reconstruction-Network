@@ -1,0 +1,144 @@
+experiment:
+  name: "miso_dilated_se_test"
+  seed: 42
+
+paths:
+  log_dir: "C:/Users/sysu/Desktop/tp_reconstruction/logs/miso_dilated_se/leading6"
+  save_dir: "C:/Users/sysu/Desktop/tp_reconstruction/parameters/miso_dilated_se/leading6"
+
+data:
+  train_root: "C:/Users/sysu/Desktop/tp_reconstruction/data/train"
+  valid_root: "C:/Users/sysu/Desktop/tp_reconstruction/data/test"
+
+  height: 31
+  width: 21
+
+  lead_days: 6
+  input_mode: "antecedent_mean"
+
+  variables:
+    q_700:
+      enabled: true
+      folder: "q_700"
+
+    w_500:
+      enabled: true
+      folder: "w_500"
+
+    u_850:
+      enabled: true
+      folder: "u_850"
+
+    u_200:
+      enabled: true
+      folder: "u_200"
+
+    v_850:
+      enabled: true
+      folder: "v_850"
+
+    v_200:
+      enabled: true
+      folder: "v_200"
+
+    vor_850:
+      enabled: true
+      folder: "vor_850"
+
+    div_850:
+      enabled: true
+      folder: "div_850"
+
+    div_200:
+      enabled: true
+      folder: "div_200"
+
+    sst:
+      enabled: true
+      folder: "sst"
+
+    ttr:
+      enabled: true
+      folder: "ttr"
+
+    t_200:
+      enabled: true
+      folder: "t_200"
+
+    t_850:
+      enabled: true
+      folder: "t_850"
+    
+    Z_200:
+      enabled: true
+      folder: "Z_200"
+
+    Z_850:
+      enabled: true
+      folder: "Z_850"
+
+  target:
+    name: "tp"
+    folder: "tp"
+
+model:
+  stem_channels: 32
+
+  block_channels:
+    - 32
+    - 32
+    - 48
+    - 48
+    - 32
+    - 16
+
+  dilations:
+    - 1
+    - 2
+    - 4
+    - 4
+    - 2
+    - 1
+
+  se_reduction: 8
+
+training:
+  epochs: 500
+  batch_size: 4
+  num_workers: 4
+
+optimizer:
+  lr: 1.0e-4
+  weight_decay: 1.0e-4
+
+scheduler:
+  t_max: 200
+  eta_min: 5.0e-7
+
+early_stopping:
+  patience: 5
+
+
+test:
+  checkpoint_path: "C:/Users/sysu/Desktop/tp_reconstruction/parameters/miso_dilated_se/leading6/checkpoint_30_final_0.002758.pth.tar"
+  output_dir: "C:/Users/sysu/Desktop/tp_reconstruction/results/miso_dilated_se/leading6"
+  log_dir: "C:/Users/sysu/Desktop/tp_reconstruction/logs/miso_dilated_se/leading6"
+
+  batch_size: 1
+  num_workers: 4
+
+gradient_shap:
+  checkpoint_path: "C:/Users/sysu/Desktop/tp_reconstruction/parameters/miso_dilated_se/leading6/checkpoint_30_final_0.002758.pth.tar"
+
+  save_dir: "C:/Users/sysu/Desktop/tp_reconstruction/gradient_shap/leading6"
+
+  log_dir: "C:/Users/sysu/Desktop/tp_reconstruction/gradient_shap_logs/leading6"
+
+  batch_size: 1
+  num_workers: 0
+
+  # 每个样本用于近似 Gradient SHAP 的采样次数
+  nsamples: 200
+
+  # SHAP 内部计算梯度时的批次大小
+  explainer_batch_size: 1
